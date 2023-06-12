@@ -21,7 +21,8 @@ export type TransformDraggedElementFunction = (
 export declare type Item = Record<string, any>;
 export interface Options {
     items: Item[]; // the list of items that was used to generate the children of the given node
-    type?: string; // the type of the dnd zone. children dragged from here can only be dropped in other zones of the same type, defaults to a base type
+    types?: string[]; // the types of the dnd zone. children dragged from here can only be dropped in other zones of the same type, defaults to a base type
+    receives?: string[]; // types the dnd zone can receive
     flipDurationMs?: number; // if the list animated using flip (recommended), specifies the flip duration such that everything syncs with it without conflict
     dragDisabled?: boolean;
     morphDisabled?: boolean;

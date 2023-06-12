@@ -143,7 +143,8 @@ export function hideElement(dragTarget) {
  * @param {HTMLElement} shadowEl
  */
 export function decorateShadowEl(shadowEl) {
-    shadowEl.style.visibility = "hidden";
+    // TODO: refactor/restore this line at some point
+    //shadowEl.style.visibility = "hidden";
     shadowEl.setAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME, "true");
 }
 
