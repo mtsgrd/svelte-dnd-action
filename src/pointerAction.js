@@ -147,16 +147,19 @@ function findShadowPlaceHolderIdx(items) {
 
 // Finds the shadow element recursively, but returns the index of its parent. This can be used
 // to confirm the presence of an element, but is not useful for removing it.
-function findShadowElementIdx(items) {
+function findShadowElementIdx(items, nested = true) {
     // checking that the id is not the placeholder's for Dragula like usecases
     const idx = items.findIndex(item => !!item[SHADOW_ITEM_MARKER_PROPERTY_NAME] && item[ITEM_ID_KEY] !== SHADOW_PLACEHOLDER_ITEM_ID);
     if (idx > -1) {
         return idx;
     }
+    if (!nested) {
+        return -1;
+    }
     for (let item of items) {
         for (let prop in item) {
             if (item[prop] instanceof Array) {
-                if (findShadowElementIdx(item[prop]) > -1) {
+                if (findShadowElementIdx(item[prop], nested) > -1) {
                     return items.indexOf(item);
                 }
             }
@@ -254,7 +257,7 @@ function handleDraggedLeft(e) {
         printDebug(() => "drop is currently disabled");
         return;
     }
-    items = removeShadowItem(items);
+    removeShadowItem(items);
     shadowElDropZone = undefined;
     const {type, theOtherDz} = e.detail;
     if (
@@ -555,7 +558,7 @@ export function dndzone(node, options) {
         config.types = types;
         config.receives = receives;
         registerDropZone(node, config.receives);
-        config.items = [...items];
+        config.items = items;
         config.dragDisabled = dragDisabled;
         config.morphDisabled = morphDisabled;
         config.transformDraggedElement = transformDraggedElement;
@@ -605,7 +608,7 @@ export function dndzone(node, options) {
         config.dropFromOthersDisabled = dropFromOthersDisabled;
 
         dzToConfig.set(node, config);
-        const shadowElIdx = findShadowElementIdx(config.items);
+        const shadowElIdx = findShadowElementIdx(config.items, false);
         for (let idx = 0; idx < node.children.length; idx++) {
             const draggableEl = node.children[idx];
             styleDraggable(draggableEl, dragDisabled);

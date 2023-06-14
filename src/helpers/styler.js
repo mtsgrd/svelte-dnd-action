@@ -139,22 +139,45 @@ export function hideElement(dragTarget) {
 }
 
 /**
+ * Recursively finds a shadow element
+ * @param {HTMLElement} shadowEl
+ */
+function findShadowEl(parent) {
+    if (parent.hasAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME)) {
+        return parent;
+    }
+    for (let child of parent.children) {
+        const shadowEl = findShadowEl(child);
+        if (shadowEl) {
+            return shadowEl;
+        }
+    }
+}
+/**
  * styles the shadow element
  * @param {HTMLElement} shadowEl
  */
-export function decorateShadowEl(shadowEl) {
+export function decorateShadowEl(el) {
     // TODO: refactor/restore this line at some point
-    //shadowEl.style.visibility = "hidden";
-    shadowEl.setAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME, "true");
+    let shadowEl = findShadowEl(el);
+    if (shadowEl) {
+        return;
+    }
+    el.style.visibility = "hidden";
+    el.setAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME, "true");
 }
 
 /**
  * undo the styles the shadow element
  * @param {HTMLElement} shadowEl
  */
-export function unDecorateShadowElement(shadowEl) {
-    shadowEl.style.visibility = "";
-    shadowEl.removeAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME);
+export function unDecorateShadowElement(el) {
+    let shadowEl = findShadowEl(el);
+    if (shadowEl) {
+        shadowEl.style.visibility = "";
+        shadowEl.removeAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME);
+        return;
+    }
 }
 
 /**
