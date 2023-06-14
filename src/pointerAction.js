@@ -173,8 +173,7 @@ function findShadowElementIdx(items) {
  */
 function unshadowItem(item) {
     if (item[SHADOW_ITEM_MARKER_PROPERTY_NAME]) {
-        delete item[SHADOW_ITEM_MARKER_PROPERTY_NAME];
-        return {...item};
+        return draggedElData;
     }
     for (let key in item) {
         if (item[key] instanceof Array) {
@@ -184,7 +183,7 @@ function unshadowItem(item) {
             }
         }
     }
-    return {...item};
+    return item;
 }
 
 /**
@@ -402,6 +401,11 @@ function cleanupPostDrop() {
     isDraggedOutsideOfAnyDz = false;
 }
 
+// Avoid using {...syntax} for copying typed objects.
+function cloneWithPrototype(original) {
+    return Object.assign(Object.create(Object.getPrototypeOf(original)), original);
+}
+
 export function dndzone(node, options) {
     let initialized = false;
     const config = {
@@ -486,11 +490,14 @@ export function dndzone(node, options) {
         const rootNode = originDropZone.getRootNode();
         const originDropZoneRoot = rootNode.body || rootNode;
         const {items, types, centreDraggedOnCursor} = config;
-        draggedElData = {...items[currentIdx]};
+        draggedElData = cloneWithPrototype(items[currentIdx]);
         draggedElTypes = types;
-        shadowElData = {...draggedElData, [SHADOW_ITEM_MARKER_PROPERTY_NAME]: true};
+        shadowElData = cloneWithPrototype(draggedElData);
+        shadowElData[SHADOW_ITEM_MARKER_PROPERTY_NAME] = true;
+
         // The initial shadow element. We need a different id at first in order to avoid conflicts and timing issues
-        const placeHolderElData = {...shadowElData, [ITEM_ID_KEY]: SHADOW_PLACEHOLDER_ITEM_ID};
+        const placeHolderElData = cloneWithPrototype(shadowElData);
+        placeHolderElData[ITEM_ID_KEY] = SHADOW_PLACEHOLDER_ITEM_ID;
 
         // creating the draggable element
         draggedEl = createDraggedElementFrom(originalDragTarget, centreDraggedOnCursor && currentMousePosition);
