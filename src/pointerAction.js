@@ -107,10 +107,7 @@ function watchDraggedElement() {
     }
     window.addEventListener(DRAGGED_LEFT_DOCUMENT_EVENT_NAME, handleDrop);
     // it is important that we don't have an interval that is faster than the flip duration because it can cause elements to jump bach and forth
-    const observationIntervalMs = Math.max(
-        MIN_OBSERVATION_INTERVAL_MS,
-        ...Array.from(dropZones.keys()).map(dz => dzToConfig.get(dz).dropAnimationDurationMs)
-    );
+    const observationIntervalMs = Math.max(MIN_OBSERVATION_INTERVAL_MS, ...Array.from(dropZones.keys()).map(dz => dzToConfig.get(dz).flipDurationMs));
     observe(draggedEl, dropZones, observationIntervalMs * 1.07);
 }
 function unWatchDraggedElement() {
@@ -362,11 +359,11 @@ function animateDraggedToFinalPosition(shadowElIdx, callback) {
         x: shadowElRect.left - parseFloat(draggedEl.style.left),
         y: shadowElRect.top - parseFloat(draggedEl.style.top)
     };
-    const {dropAnimationDurationMs} = dzToConfig.get(shadowElDropZone);
-    const transition = `transform ${dropAnimationDurationMs}ms ease`;
+    const {flipDurationMs} = dzToConfig.get(shadowElDropZone);
+    const transition = `transform ${flipDurationMs}ms ease`;
     draggedEl.style.transition = draggedEl.style.transition ? draggedEl.style.transition + "," + transition : transition;
     draggedEl.style.transform = `translate3d(${newTransform.x}px, ${newTransform.y}px, 0)`;
-    window.setTimeout(callback, dropAnimationDurationMs);
+    window.setTimeout(callback, flipDurationMs);
 }
 
 function scheduleDZForRemovalAfterDrop(dz, destroy) {
@@ -551,7 +548,7 @@ export function dndzone(node, options) {
         transformDraggedElement = () => {},
         centreDraggedOnCursor = false
     }) {
-        config.dropAnimationDurationMs = flipDurationMs;
+        config.flipDurationMs = flipDurationMs;
         if (config.types && types !== config.types) {
             unregisterDropZone(node, config.receives);
         }
