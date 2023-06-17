@@ -329,6 +329,8 @@ function handleDrop() {
     let shadowElIdx = findShadowElementIdx(items);
     if (shadowElIdx != -1) {
         items[shadowElIdx] = unshadowItem(items[shadowElIdx]);
+    } else {
+        items.push(draggedElData); // Insert dragged element if there is no shadow present
     }
 
     function finalizeWithinZone() {
@@ -346,10 +348,16 @@ function handleDrop() {
                 source: SOURCES.POINTER
             });
         }
-        unDecorateShadowElement(shadowElDropZone.children[shadowElIdx]);
+        if (shadowElIdx != -1) {
+            unDecorateShadowElement(shadowElDropZone.children[shadowElIdx]);
+        }
         cleanupPostDrop();
     }
-    animateDraggedToFinalPosition(shadowElIdx, finalizeWithinZone);
+    if (shadowElIdx != -1) {
+        animateDraggedToFinalPosition(shadowElIdx, finalizeWithinZone);
+    } else {
+        finalizeWithinZone();
+    }
 }
 
 // helper function for handleDrop
@@ -608,6 +616,9 @@ export function dndzone(node, options) {
         const shadowElIdx = findShadowElementIdx(config.items, false);
         for (let idx = 0; idx < node.children.length; idx++) {
             const draggableEl = node.children[idx];
+            if (draggableEl.hasAttribute("data-dnd-ignore")) {
+                continue;
+            }
             styleDraggable(draggableEl, dragDisabled);
             if (idx === shadowElIdx) {
                 config.transformDraggedElement(draggedEl, draggedElData, idx);
