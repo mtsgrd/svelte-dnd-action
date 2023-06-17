@@ -19,6 +19,7 @@ import {toString} from "./helpers/util";
  * @property {number} [zoneTabIndex] - set the tabindex of the list container when not dragging
  * @property {object} [dropTargetStyle]
  * @property {string[]} [dropTargetClasses]
+ * @property {[propName: string]: string[]} [dropTargetClassMap]
  * @property {function} [transformDraggedElement]
  * @param {HTMLElement} node - the element to enhance
  * @param {Options} options
@@ -54,6 +55,7 @@ function validateOptions(options) {
         zoneTabIndex,
         dropTargetStyle,
         dropTargetClasses,
+        dropTargetClassMap,
         transformDraggedElement,
         autoAriaDisabled,
         centreDraggedOnCursor,

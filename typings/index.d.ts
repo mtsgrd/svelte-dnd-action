@@ -29,6 +29,7 @@ export interface Options {
     dropFromOthersDisabled?: boolean;
     zoneTabIndex?: number; // set the tabindex of the list container when not dragging
     dropTargetClasses?: string[];
+    dropTargetClassMap?: {[propName: string]: string[]};
     dropTargetStyle?: Record<string, string>;
     transformDraggedElement?: TransformDraggedElementFunction;
     autoAriaDisabled?: boolean;
@@ -69,6 +70,7 @@ export interface DndEventInfo {
     trigger: TRIGGERS; // the type of dnd event that took place
     id: string;
     source: SOURCES; // the type of interaction that the user used to perform the dnd operation
+    types: string[];
 }
 
 export type DndEvent<T = Item> = {
