@@ -163,7 +163,7 @@ export function decorateShadowEl(el) {
     if (shadowEl) {
         return;
     }
-    el.style.visibility = "hidden";
+    el.style.opacity = "0.25";
     el.setAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME, "true");
 }
 
@@ -174,7 +174,7 @@ export function decorateShadowEl(el) {
 export function unDecorateShadowElement(el) {
     let shadowEl = findShadowEl(el);
     if (shadowEl) {
-        shadowEl.style.visibility = "";
+        shadowEl.style.opacity = "1";
         shadowEl.removeAttribute(SHADOW_ELEMENT_ATTRIBUTE_NAME);
         return;
     }
