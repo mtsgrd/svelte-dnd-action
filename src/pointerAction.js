@@ -534,8 +534,8 @@ export function dndzone(node, options) {
                 // to prevent the outline from disappearing
                 draggedEl.focus();
                 watchDraggedElement();
-                hideElement(originalDragTarget);
-                originDropZoneRoot.appendChild(originalDragTarget);
+                // hideElement(originalDragTarget);
+                // originDropZoneRoot.appendChild(originalDragTarget);
             } else {
                 window.requestAnimationFrame(keepOriginalElementInDom);
             }
