@@ -348,6 +348,11 @@ function handleDrop() {
         items.push(draggedElData); // Insert dragged element if there is no shadow present
     }
 
+    let shadowPlaceHolderIdx = findShadowPlaceHolderIdx(items);
+    if (shadowPlaceHolderIdx !== -1) {
+        items.splice(shadowPlaceHolderIdx, 1);
+    }
+
     function finalizeWithinZone() {
         unlockOriginDzMinDimensions();
         dispatchFinalizeEvent(shadowElDropZone, items, {
